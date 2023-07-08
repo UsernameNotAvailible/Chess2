@@ -17,12 +17,19 @@ public class Rook extends Piece {
     }
     @Override
     protected ArrayList<int[]> allPotentialMoves() {
+        move[0] = x;
+        move[1] = y;
+        move[4] = -1;
         for (int i = 0; i < 8; i++) {
+            move[2] = x;
+            move[3] = i;
             if (i != x) {
-                potentialMoves.add(new int[]{x, i});
+                potentialMoves.add(move.clone());
             }
+            move[2] = i;
+            move[3] = y;
             if (i != y) {
-                potentialMoves.add(new int[]{i, y});
+                potentialMoves.add(move.clone());
             }
         }
         return potentialMoves;

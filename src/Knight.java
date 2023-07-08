@@ -20,45 +20,48 @@ public class Knight extends Piece {
 
     @Override
     protected ArrayList<int[]> allPotentialMoves() {
+        move[0] = x;
+        move[1] = y;
+        move[4] = -1;
         if (x + 2 < 8 && y + 1 < 8) {
-            move[0] = x + 2;
-            move[1] = y + 1;
-            potentialMoves.add(move);
+            move[2] = x + 2;
+            move[3] = y + 1;
+            potentialMoves.add(move.clone());
         }
         if (x + 2 < 8 && y - 1 > -1) {
-            move[0] = x + 2;
-            move[1] = y - 1;
-            potentialMoves.add(move);
+            move[2] = x + 2;
+            move[3] = y - 1;
+            potentialMoves.add(move.clone());
         }
         if (x - 2 > -1 && y + 1 < 8) {
-            move[0] = x - 2;
-            move[1] = y + 1;
-            potentialMoves.add(move);
+            move[2] = x - 2;
+            move[3] = y + 1;
+            potentialMoves.add(move.clone());
         }
         if (x - 2 > -1 && y - 1 > -1) {
-            move[0] = x - 2;
-            move[1] = y - 1;
-            potentialMoves.add(move);
+            move[2] = x - 2;
+            move[3] = y - 1;
+            potentialMoves.add(move.clone());
         }
         if (x + 1 < 8 && y + 2 < 8) {
-            move[0] = x + 1;
-            move[1] = y + 2;
-            potentialMoves.add(move);
+            move[2] = x + 1;
+            move[3] = y + 2;
+            potentialMoves.add(move.clone());
         }
         if (x + 1 < 8 && y - 2 > -1) {
-            move[0] = x + 1;
-            move[1] = y - 2;
-            potentialMoves.add(move);
+            move[2] = x + 1;
+            move[3] = y - 2;
+            potentialMoves.add(move.clone());
         }
         if (x - 1 > -1 && y + 2 < 8) {
-            move[0] = x - 1;
-            move[1] = y + 2;
-            potentialMoves.add(move);
+            move[2] = x - 1;
+            move[3] = y + 2;
+            potentialMoves.add(move.clone());
         }
         if (x - 1 > -1 && y - 2 > -1) {
-            move[0] = x - 1;
-            move[1] = y - 2;
-            potentialMoves.add(move);
+            move[2] = x - 1;
+            move[3] = y - 2;
+            potentialMoves.add(move.clone());
         }
         return potentialMoves;
     }

@@ -20,32 +20,49 @@ public class Pawn extends Piece {
 
     @Override
     protected ArrayList<int[]> allPotentialMoves() {
+        move[0] = x;
+        move[1] = y;
+        move[4] = 0;
         if (black) {
-            move[0] = x + 1;
-            move[1] = y - 1;
-            potentialMoves.add(move);
-            move[0] = x - 1;
-            potentialMoves.add(move);
-            move[0] = x;
-            move[1] = y - 1;
-            potentialMoves.add(move);
+            move[2] = x + 1;
+            move[3] = y - 1;
+            potentialMoves.add(move.clone());
+            move[2] = x - 1;
+            potentialMoves.add(move.clone());
+            move[2] = x;
+            potentialMoves.add(move.clone());
+            if (y == 1) {
+                move[4] = 1;
+                potentialMoves.add(move.clone());
+                move[4] = 2;
+                potentialMoves.add(move.clone());
+                move[4] = 3;
+                potentialMoves.add(move.clone());
+            }
             if (y == 6) {
-                move[1] = y - 2;
-                potentialMoves.add(move);
+                move[3] = y - 2;
+                potentialMoves.add(move.clone());
             }
         }
         else {
-            move[0] = x + 1;
-            move[1] = y + 1;
-            potentialMoves.add(move);
-            move[0] = x - 1;
-            potentialMoves.add(move);
-            move[0] = x;
-            move[1] = y - 1;
-            potentialMoves.add(move);
+            move[2] = x + 1;
+            move[3] = y + 1;
+            potentialMoves.add(move.clone());
+            move[2] = x - 1;
+            potentialMoves.add(move.clone());
+            move[2] = x;
+            potentialMoves.add(move.clone());
             if (y == 6) {
-                move[1] = y + 2;
-                potentialMoves.add(move);
+                move[4] = 1;
+                potentialMoves.add(move.clone());
+                move[4] = 2;
+                potentialMoves.add(move.clone());
+                move[4] = 3;
+                potentialMoves.add(move.clone());
+            }
+            if (y == 1) {
+                move[3] = y + 2;
+                potentialMoves.add(move.clone());
             }
         }
         return potentialMoves;

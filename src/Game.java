@@ -1,13 +1,10 @@
 import javax.swing.plaf.PanelUI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 
 import static java.lang.Math.*;
 
 public class Game {
-    private ArrayList<int[]> legalMoves = new ArrayList<>();
+    private Stack<int[]> legalMoves = new Stack<>();
     private Stack<Piece> capturedPieces = new Stack<>();
     private Stack<int[]> moves = new Stack<>();
     private Stack<String> FENStack = new Stack<>();
@@ -110,13 +107,13 @@ public class Game {
         if (piece == 'n') {pieces[pieceCounter] = new Knight(x, y, true);/*pieces[pieceCounter].move(x, y);*/}
         if (piece == 'b') {pieces[pieceCounter] = new Bishop(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
         if (piece == 'q') {pieces[pieceCounter] = new Queen(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'k') {pieces[pieceCounter] = new King(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
+        if (piece == 'k') {pieces[pieceCounter] = new King(x, y, true); blackKingPosition[0] = x; blackKingPosition[1] = y; blackKingPosition2[0] = x; blackKingPosition2[1] = y;}
         if (piece == 'p') {pieces[pieceCounter] = new Pawn(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
         if (piece == 'R') {pieces[pieceCounter] = new Rook(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
         if (piece == 'N') {pieces[pieceCounter] = new Knight(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
         if (piece == 'B') {pieces[pieceCounter] = new Bishop(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
         if (piece == 'Q') {pieces[pieceCounter] = new Queen(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'K') {pieces[pieceCounter] = new King(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        if (piece == 'K') {pieces[pieceCounter] = new King(x, y, false); whiteKingPosition[0] = x; whiteKingPosition[1] = y; whiteKingPosition2[0] = x; whiteKingPosition2[1] = y;}
         if (piece == 'P') {pieces[pieceCounter] = new Pawn(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
     }
     private void determineMove (char i) {
@@ -519,6 +516,10 @@ public class Game {
                     returnThePieces();
                     return ILLEGAL_MOVE;
                 }
+                if (checkPiece((xStart + xEnd)/2, yEnd)) {
+                    returnThePieces();
+                    return ILLEGAL_MOVE;
+                }
                 isCastling = true;
             }
             if (movingPiece.black) {
@@ -826,12 +827,6 @@ public class Game {
     }
     public Game(String FEN) {
         FENReader(FEN);
-        whiteKingPosition = findPiece('k', false);
-        blackKingPosition = findPiece('k', true);
-        blackKingPosition2[0] = blackKingPosition[0];
-        blackKingPosition2[1] = blackKingPosition[1];
-        whiteKingPosition2[0] = whiteKingPosition[0];
-        whiteKingPosition2[1] = whiteKingPosition[1];
         this.FEN = FEN;
     }
     public void debugPrint() {
@@ -859,51 +854,57 @@ public class Game {
         }
          */
     }
-    public ArrayList<int[]> legalMoves() {
 
+    public ArrayList<int[]> legalMoves() {
+        ArrayList<int[]> legalMoves = new ArrayList<>();
         int[][] startingPositions = new int[218][3];
         int counter = 0;
 
         for (Piece c: pieces) {
             if (c != null) {
                 if (c.black != sideMove) {
-                    startingPositions[counter][0] = c.x;
+                    legalMoves.addAll(c.allPotentialMoves());
+                    /*startingPositions[counter][0] = c.x;
                     startingPositions[counter][1] = c.y;
                     startingPositions[counter][2] = c.type;
                     counter++;
+
+                     */
                 }
             }
         }
 
-        for (int[] i : startingPositions) {
-            for (int j = 0; j < 8; j++) {
-                for (int a = 0; a < 8; a++) {
-                    if (ruleCheck(i[0], i[1], a, j)[0]) {
-                        move[0] = i[0]; move[1] = i[1]; move[2] = a; move[3] = j;
+        for (int i = 0; i < legalMoves.size(); i++) {
+            move = legalMoves.get(i);
+            if (!ruleCheck(move[0], move[1], move[2], move[3])[0]) {
+                legalMoves.remove(i);
+                i--;
+                /*
+                if (ruleCheck(i[0], i[1], a, j)[1]) {
+                    legalMoves.remove(legalMoves.size() - 1);
+                    for (int c = 0; c < 4; c++) {
+                        move[4] = c;
                         legalMoves.add(move.clone());
-                        if (ruleCheck(i[0], i[1], a, j)[1]) {
-                            legalMoves.remove(legalMoves.size() - 1);
-                            for (int c = 0; c < 4; c++) {
-                                move[4] = c;
-                                legalMoves.add(move.clone());
-                            }
-                            move[4] = 0;
-                        }
                     }
+                    move[4] = 0;
                 }
+                 */
             }
         }
 
 
         return legalMoves;
     }
+    ArrayList<String> FENs = new ArrayList<>();
     public int countLegalPositions(int depth) {
+        ArrayList<int[]> moves = new ArrayList<>();
         if (depth == 0) {
+            FENs.add(FEN);
             return 1;
         }
-        number1 = 0;
-        legalMoves = legalMoves();
-        for (int[] move: legalMoves) {
+        int number1 = 0;
+        moves = legalMoves();
+        for (int[] move: moves) {
             makeMove(move[0], move[1], move[2], move[3], move[4]);
             number1 += countLegalPositions(depth - 1);
             unmakeMove();

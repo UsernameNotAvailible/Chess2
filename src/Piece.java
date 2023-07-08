@@ -9,7 +9,7 @@ public abstract class Piece {
     boolean black;
     char type;
     protected ArrayList<int[]> potentialMoves = new ArrayList<>();
-    protected int[] move = new int[2];
+    protected int[] move = new int[5];
 
     protected Piece (int x, int y, boolean black, char type) {
         this.y = y;
