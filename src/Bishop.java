@@ -24,7 +24,7 @@ public class Bishop extends Piece {
         move[0] = x;
         move[1] = y;
         move[4] = -1;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 8; i++) {
             if (x + i < 8 && i + y < 8) {
                 move[2] = x + i;
                 move[3] = y + i;

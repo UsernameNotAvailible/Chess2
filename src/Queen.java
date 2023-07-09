@@ -28,16 +28,16 @@ public class Queen extends Piece {
         for (int i = 0; i < 8; i++) {
             move[2] = x;
             move[3] = i;
-            if (i != x) {
+            if (i != y) {
                 potentialMoves.add(move.clone());
             }
             move[2] = i;
             move[3] = y;
-            if (i != y) {
+            if (i != x) {
                 potentialMoves.add(move.clone());
             }
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 8; i++) {
             if (x + i < 8 && i + y < 8) {
                 move[2] = x + i;
                 move[3] = y + i;

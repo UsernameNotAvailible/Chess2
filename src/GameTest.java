@@ -69,22 +69,24 @@ class GameTest {
 
     @org.junit.jupiter.api.Test
     void legalMoves() {
-        var game = new Game("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        var game = new Game("rnb2k1r/pp1Pbppp/2p5/q7/2B5/7P/PPP1NnP1/RNBQK2R w KQ - 1 9");
         ArrayList<int[]> moves = game.legalMoves();
     }
 
     @org.junit.jupiter.api.Test
     void countLegalPositions() {
-        var game = new Game("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        var game = new Game("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
         int number = game.countLegalPositions(4);
-        HashMap<String, Integer> repetitions = new HashMap<String, Integer>();
+        /*HashMap<String, Integer> repetitions = new HashMap<String, Integer>();
 
         for (String fen: game.FENs) {
             if (!repetitions.containsKey(fen)) {
                 repetitions.put(fen, 1);
             }
         }
-        System.out.println(repetitions.size());
-        assertEquals(197281, number);
+
+         */
+        //System.out.println(repetitions.size());
+        assertEquals(2103487, number);
     }
 }

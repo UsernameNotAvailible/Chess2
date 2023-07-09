@@ -49,6 +49,17 @@ public class Game {
     public boolean isSideMove() {
         return sideMove;
     }
+
+    public int[] getBlackKingPosition() {
+        return blackKingPosition;
+    }
+    public int[] getWhiteKingPosition() {
+        return whiteKingPosition;
+    }
+    public String getFEN() {
+        return FEN;
+    }
+
     private void voidPieces() {
         pieces = new Piece[32];
     }
@@ -104,17 +115,17 @@ public class Game {
     }
     private void create(char piece, int pieceCounter, int x, int y) {
         if (piece == 'r') {pieces[pieceCounter] = new Rook(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'n') {pieces[pieceCounter] = new Knight(x, y, true);/*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'b') {pieces[pieceCounter] = new Bishop(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'q') {pieces[pieceCounter] = new Queen(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'k') {pieces[pieceCounter] = new King(x, y, true); blackKingPosition[0] = x; blackKingPosition[1] = y; blackKingPosition2[0] = x; blackKingPosition2[1] = y;}
-        if (piece == 'p') {pieces[pieceCounter] = new Pawn(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'R') {pieces[pieceCounter] = new Rook(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'N') {pieces[pieceCounter] = new Knight(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'B') {pieces[pieceCounter] = new Bishop(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'Q') {pieces[pieceCounter] = new Queen(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        if (piece == 'K') {pieces[pieceCounter] = new King(x, y, false); whiteKingPosition[0] = x; whiteKingPosition[1] = y; whiteKingPosition2[0] = x; whiteKingPosition2[1] = y;}
-        if (piece == 'P') {pieces[pieceCounter] = new Pawn(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'n') {pieces[pieceCounter] = new Knight(x, y, true);/*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'b') {pieces[pieceCounter] = new Bishop(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'q') {pieces[pieceCounter] = new Queen(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'k') {pieces[pieceCounter] = new King(x, y, true); blackKingPosition[0] = x; blackKingPosition[1] = y; blackKingPosition2[0] = x; blackKingPosition2[1] = y;}
+        else if (piece == 'p') {pieces[pieceCounter] = new Pawn(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'R') {pieces[pieceCounter] = new Rook(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'N') {pieces[pieceCounter] = new Knight(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'B') {pieces[pieceCounter] = new Bishop(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'Q') {pieces[pieceCounter] = new Queen(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        else if (piece == 'K') {pieces[pieceCounter] = new King(x, y, false); whiteKingPosition[0] = x; whiteKingPosition[1] = y; whiteKingPosition2[0] = x; whiteKingPosition2[1] = y;}
+        else if (piece == 'P') {pieces[pieceCounter] = new Pawn(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
     }
     private void determineMove (char i) {
         if (i == 'w') {sideMove = true;}
@@ -423,23 +434,27 @@ public class Game {
         c = findPiece(x - 2, y - 1);
         if (c != null && (c.black != black) && (c.type == 'n')) return true;
 
-        c = findPiece(x - 1, y - 1);
-        if (c != null && c.black != black && c.type == 'p') {
-            return true;
+        if (black) {
+            c = findPiece(x - 1, y - 1);
+            if (c != null && !c.black && c.type == 'p') {
+                return true;
+            }
+            c = findPiece(x + 1, y - 1);
+            if (c != null && !c.black && c.type == 'p') {
+                return true;
+            }
         }
-        c = findPiece(x + 1, y - 1);
-        if (c != null && c.black != black && c.type == 'p') {
-            return true;
+        else {
+            c = findPiece(x - 1, y + 1);
+            if (c != null && c.black && c.type == 'p') {
+                return true;
+            }
+            c = findPiece(x + 1, y + 1);
+            if (c != null && c.black && c.type == 'p') {
+                return true;
+            }
+
         }
-        c = findPiece(x - 1, y + 1);
-        if (c != null && c.black != black && c.type == 'p') {
-            return true;
-        }
-        c = findPiece(x + 1, y + 1);
-        if (c != null && c.black != black && c.type == 'p') {
-            return true;
-        }
-        
         return false;
     }
     private void moveTheRook(int xStart, int yStart, int xEnd, int yEnd) {
@@ -482,9 +497,6 @@ public class Game {
                 return ILLEGAL_MOVE;
             }
         }
-        if (movingPiece.type == 'n') {
-
-        }
         if (movingPiece.type == 'b') {
             if (bishopChep(xStart, yStart, xEnd, yEnd)) {
                 return ILLEGAL_MOVE;
@@ -498,26 +510,25 @@ public class Game {
                 return ILLEGAL_MOVE;
             }
         }
+        blackKingPosition2 = blackKingPosition.clone();
+        whiteKingPosition2 = whiteKingPosition.clone();
+        isCastling = false;
         if (movingPiece.type == 'k') {
+
             if (abs(xEnd - xStart) == 2) {
                 if (xEnd == 6 && yEnd == 0 && !castlingAvailability[0]) {
-                    returnThePieces();
                     return ILLEGAL_MOVE;
                 }
-                if (xEnd == 2 && yEnd == 0 && !castlingAvailability[1]) {
-                    returnThePieces();
+                else if (xEnd == 2 && yEnd == 0 && !castlingAvailability[1]) {
                     return ILLEGAL_MOVE;
                 }
-                if (xEnd == 6 && yEnd == 7 && !castlingAvailability[2]) {
-                    returnThePieces();
+                else if (xEnd == 6 && yEnd == 7 && !castlingAvailability[2]) {
                     return ILLEGAL_MOVE;
                 }
-                if (xEnd == 2 && yEnd == 7 && !castlingAvailability[3]) {
-                    returnThePieces();
+                else if (xEnd == 2 && yEnd == 7 && !castlingAvailability[3]) {
                     return ILLEGAL_MOVE;
                 }
-                if (checkPiece((xStart + xEnd)/2, yEnd)) {
-                    returnThePieces();
+                else if (checkPiece((xStart + xEnd)/2, yEnd)) {
                     return ILLEGAL_MOVE;
                 }
                 isCastling = true;
@@ -529,6 +540,9 @@ public class Game {
             else {
                 whiteKingPosition2[0] = xEnd;
                 whiteKingPosition2[1] = yEnd;
+            }
+            if (isCastling && kingInCheck(xStart, yStart, movingPiece.black)) {
+                return ILLEGAL_MOVE;
             }
         }
 
@@ -629,17 +643,27 @@ public class Game {
     }
     private void updateProperties(int xStart, int yStart, int xEnd, int yEnd, int type) {
         movingPiece = findPiece(xStart, yStart);
+        pieceExistsAtTheEnd = checkPiece(xEnd, yEnd);
+        if (pieceExistsAtTheEnd) {
+            pieceAtTheEnd = findPiece(xEnd, yEnd);
+        }
+
+        isCapture = pieceExistsAtTheEnd && (pieceAtTheEnd.black != movingPiece.black);
+        isCastling = abs(xEnd - xStart) == 2 && movingPiece.type == 'k';
+
         if (isCastling) {
             moveTheRook(xStart, yStart, xEnd, yEnd);
         }
         if (isCapture) {
-            pieceAtTheEnd = findPiece(xEnd, yEnd);
             deletePiece(xEnd, yEnd, !movingPiece.black);
+            halfMoveCounter = 0;
         }
-        enpassantSquare[0] = -1;
-        enpassantSquare[1] = -1;
 
         movingPiece.move(xEnd, yEnd);
+        if (movingPiece.type != 'p' || (yEnd != enpassantSquare[1] || xEnd != enpassantSquare[0]) ) {
+            enpassantSquare[0] = -1;
+            enpassantSquare[1] = -1;
+        }
 
         if (movingPiece.type == 'p') {
             halfMoveCounter = 0;
@@ -659,6 +683,7 @@ public class Game {
                 promotePawn(type);
             }
         }
+
         else if (movingPiece.type == 'r') {
             if (xStart == 7 && yStart == 0) {
                 castlingAvailability[0] = false;
@@ -721,6 +746,7 @@ public class Game {
         if (!sideMove) {
             fullMoveCounter++;
         }
+
         blackKingPosition2[0] = blackKingPosition[0];
         blackKingPosition2[1] = blackKingPosition[1];
         whiteKingPosition2[0] = whiteKingPosition[0];
@@ -807,7 +833,7 @@ public class Game {
         }
     }
     public void makeMove(int xStart, int yStart, int xEnd, int yEnd, int type) {
-        ruleCheck(xStart, yStart, xEnd, yEnd);
+        //ruleCheck(xStart, yStart, xEnd, yEnd);
         /*move[0] = xStart;
         move[1] = yStart;
         move[2] = xEnd;
@@ -857,7 +883,6 @@ public class Game {
 
     public ArrayList<int[]> legalMoves() {
         ArrayList<int[]> legalMoves = new ArrayList<>();
-        int[][] startingPositions = new int[218][3];
         int counter = 0;
 
         for (Piece c: pieces) {
@@ -910,6 +935,14 @@ public class Game {
             unmakeMove();
         }
         return number1;
+    }
+    public boolean kingInCheck(boolean black) {
+        if (black) {
+            return kingInCheck(blackKingPosition[0], blackKingPosition[1], true);
+        }
+        else {
+            return kingInCheck(whiteKingPosition[0], whiteKingPosition[1], false);
+        }
     }
 
 }

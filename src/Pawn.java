@@ -34,9 +34,21 @@ public class Pawn extends Piece {
             if (y == 1) {
                 move[4] = 1;
                 potentialMoves.add(move.clone());
+                move[2] = x - 1;
+                potentialMoves.add(move.clone());
+                move[2] = x + 1;
+                potentialMoves.add(move.clone());
                 move[4] = 2;
                 potentialMoves.add(move.clone());
+                move[2] = x;
+                potentialMoves.add(move.clone());
+                move[2] = x - 1;
+                potentialMoves.add(move.clone());
                 move[4] = 3;
+                potentialMoves.add(move.clone());
+                move[2] = x + 1;
+                potentialMoves.add(move.clone());
+                move[2] = x;
                 potentialMoves.add(move.clone());
             }
             if (y == 6) {
@@ -55,9 +67,21 @@ public class Pawn extends Piece {
             if (y == 6) {
                 move[4] = 1;
                 potentialMoves.add(move.clone());
+                move[2] = x - 1;
+                potentialMoves.add(move.clone());
+                move[2] = x + 1;
+                potentialMoves.add(move.clone());
                 move[4] = 2;
                 potentialMoves.add(move.clone());
+                move[2] = x;
+                potentialMoves.add(move.clone());
+                move[2] = x - 1;
+                potentialMoves.add(move.clone());
                 move[4] = 3;
+                potentialMoves.add(move.clone());
+                move[2] = x + 1;
+                potentialMoves.add(move.clone());
+                move[2] = x;
                 potentialMoves.add(move.clone());
             }
             if (y == 1) {

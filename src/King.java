@@ -57,6 +57,13 @@ public class King extends Piece {
                 potentialMoves.add(move.clone());
             }
         }
+        if (x == 4) {
+            move[2] = 6;
+            move[3] = y;
+            potentialMoves.add(move.clone());
+            move[2] = 2;
+            potentialMoves.add(move.clone());
+        }
         return potentialMoves;
     }
 

@@ -4,19 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff99b67c-9942-4be5-9f12-3b54509cc5a2" name="Changes" comment="So much faster this time around">
-      <change afterPath="$PROJECT_DIR$/src/ToFile.java" afterDir="false" />
+    <list default="true" id="ff99b67c-9942-4be5-9f12-3b54509cc5a2" name="Changes" comment="working through bugs">
+      <change afterPath="$PROJECT_DIR$/src/Engine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/EngineBoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chess2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Chess2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Bishop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Bishop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/King.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/King.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Knight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Knight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pawn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Piece.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Queen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Queen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Rook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Rook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ToFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +33,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/GameTest.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2SDqX8Bry54y5hFD01oViuUEtt7" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -61,7 +64,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.WriteToFile">
+  <component name="RunManager">
     <configuration name="CreateFile" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="CreateFile" />
       <module name="Chess2" />
@@ -98,8 +101,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.WriteToFile" />
         <item itemvalue="JUnit.GameTest.countLegalPositions" />
+        <item itemvalue="Application.WriteToFile" />
         <item itemvalue="JUnit.GameTest.legalMoves" />
         <item itemvalue="Application.CreateFile" />
       </list>
@@ -121,12 +124,20 @@
       <option name="project" value="LOCAL" />
       <updated>1688799922653</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="working through bugs">
+      <created>1688856242861</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1688856242861</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="So much faster this time around" />
-    <option name="LAST_COMMIT_MESSAGE" value="So much faster this time around" />
+    <MESSAGE value="working through bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="working through bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -136,7 +147,20 @@
           <line>72</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/EngineBoard.java</url>
+          <line>17</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Engine.java</url>
+          <line>106</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Chess2$GameTest_legalMoves.ic" NAME="GameTest.legalMoves Coverage Results" MODIFIED="1688868942599" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

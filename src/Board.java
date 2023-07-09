@@ -27,6 +27,9 @@ public class Board extends JFrame{
     private Color colour = Color.DARK_GRAY;
     private int ENGINE_ENABLED;
     private int AUTOQUEEN = 0;
+    public int[] getMove() {
+        return new int[] {xStart, yStart, xEnd, yEnd};
+    }
 
     //Scanner scanner = new Scanner();
     Board(String FEN, int ENGINE_ENABLED) {
@@ -235,7 +238,7 @@ public class Board extends JFrame{
         }
     }
     public static void main(String[] args) {
-        Board chessBoard = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 0);
+        Board chessBoard = new Board("rnbb1bnr/Rpppr2p/2Q2p2/5Pp1/5PQ1/R4PP1/1kq5/3K4 b - - 0 3", 0);
 
 
     }
