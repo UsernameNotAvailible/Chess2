@@ -12,7 +12,7 @@ public class Engine {
     private int evaluation;
     private Random rand = new Random();
     int[] move = new int[5];
-    private Game game = new Game("4k3/8/8/8/8/r7/7r/4K3 w - - 0 1");
+    private Game game = new Game("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     public void makeMove (int[] move) {
         game.makeMove(move[0], move[1], move[2], move[3], move[4]);
     }
@@ -46,35 +46,36 @@ public class Engine {
         int whiteEval = evaluate(position, false);
         int blackEval = evaluate(position, true);
         int eval = whiteEval - blackEval;
-        int perspective = 1;
+        int perspective = -1;
         if (position.isSideMove()) {
-            perspective = -1;
+            perspective = 1;
         }
         return eval * perspective;
     }
 
-    public int recursiveEvaluation(int depth, int alpha, int beta) {
-        if (depth > 0) {
-            ArrayList<int[]> legalMoves = game.legalMoves();
-            if (legalMoves.isEmpty()) {
-                if (game.kingInCheck(!game.isSideMove())) {
-                    return 10001;
-                }
-                else return 0;
-            }
-            for (int[] move : legalMoves) {
-                game.makeMove(move[0], move[1], move[2], move[3], move[4]);
-                int evaluation = -recursiveEvaluation(depth - 1, -beta, -alpha);
-                game.unmakeMove();
-                if (evaluation >= beta) {
-                    return beta;
-                }
-                alpha = max(alpha, evaluation);
-            }
-            return alpha;
+    public int recursiveEvaluation(int depth, int alpha, int beta, int start) {
+        if (depth == 0) { return evaluate2(game); }
 
+        ArrayList<int[]> legalMoves = game.legalMoves();
+        if (legalMoves.isEmpty()) {
+            if (game.kingInCheck(!game.isSideMove())) {
+                return -10000;
+            }
+            else return 0;
         }
-        return evaluate2(game);
+        for (int[] move : legalMoves) {
+            game.makeMove(move[0], move[1], move[2], move[3], move[4]);
+            int evaluation = -recursiveEvaluation(depth - 1, -beta, -alpha, start);
+            game.unmakeMove();
+            if (evaluation >= beta) {
+                return beta;
+            }
+            if (start == depth && alpha < evaluation) {
+                this.move = move;
+            }
+            alpha = max(alpha, evaluation);
+        }
+        return alpha;
     }
 
     private int max(int a, int b) {
@@ -85,7 +86,15 @@ public class Engine {
             return b;
         }
     }
-    public int[] returnMove(Game position) {
+    private int min(int a, int b) {
+        if (a < b) {
+            return a;
+        }
+        else {
+            return b;
+        }
+    }
+    public int[] returnMove() {
         return move;
     }
     public int[] returnMove2(Game position) {
@@ -105,7 +114,7 @@ public class Engine {
         ArrayList<int[]> legalMoves = game.legalMoves();
         for (int[] move: legalMoves) {
             game.makeMove(move[0], move[1], move[2], move[3], move[4]);
-            evaluation = recursiveEvaluation(depth, -10000, 10000);
+            evaluation = recursiveEvaluation(depth, -10000, 10000, depth);
             bestEvaluation = max(bestEvaluation, evaluation);
             if (bestEvaluation == evaluation) {
                 this.move = move.clone();
@@ -115,6 +124,7 @@ public class Engine {
         }
         return this.move;
     }
+
 
 
 }
