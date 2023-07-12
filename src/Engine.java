@@ -67,12 +67,13 @@ public class Engine {
             game.makeMove(move[0], move[1], move[2], move[3], move[4]);
             int evaluation = -recursiveEvaluation(depth - 1, -beta, -alpha, start);
             game.unmakeMove();
-            if (evaluation >= beta) {
-                return beta;
-            }
             if (start == depth && alpha < evaluation) {
                 this.move = move;
             }
+            if (evaluation >= beta) {
+                return beta;
+            }
+
             alpha = max(alpha, evaluation);
         }
         return alpha;

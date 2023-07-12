@@ -1,12 +1,12 @@
-import javax.swing.plaf.PanelUI;
 import java.util.*;
 
 import static java.lang.Math.*;
 
 public class Game {
-    private Stack<int[]> legalMoves = new Stack<>();
-    private Stack<Piece> capturedPieces = new Stack<>();
-    private Stack<int[]> moves = new Stack<>();
+    //private ArrayList<int[]> legalMoves = new ArrayList<>();
+    private ArrayList<int[]> opponentAttackMap = new ArrayList<>();
+    //private Stack<Piece> capturedPieces = new Stack<>();
+    //private Stack<int[]> moves = new Stack<>();
     private Stack<String> FENStack = new Stack<>();
     private Piece[] pieces = new Piece[32];
     private Piece[] pieces2 = new Piece[32];
@@ -23,17 +23,18 @@ public class Game {
     private boolean[] moveLegality = new boolean[] {false, false};;
     private boolean pieceExists = false;
     private boolean pieceExistsAtTheEnd = false;
-    private boolean bishopCheck = false;
-    private boolean rookCheck = false;
+    //private boolean bishopCheck = false;
+    //private boolean rookCheck = false;
     private boolean isCastling = false;
-    private int number = 0;
-    private int number1 = 0;
+    private int evaluation1 = 0;
+    private int evaluation2 = 0;
     private boolean[] NO_CASTLING = new boolean[] {false, false, false, false};
     private int[] whiteKingPosition = new int[] {-1, -1};
     private int[] blackKingPosition = new int[] {-1, -1};
     private int[] whiteKingPosition2 = whiteKingPosition;
     private int[] blackKingPosition2 = blackKingPosition;
-    private int[] move = new int[]{-1, -1, -1, -1, -1};
+    private int[] move = new int[] {-1, -1, -1, -1, -1};
+    private int[] square = new int[] {-1, -1};
     private Piece movingPiece = null;
     private Piece pieceAtTheEnd = null;
     private Piece c;
@@ -751,6 +752,7 @@ public class Game {
         blackKingPosition2[1] = blackKingPosition[1];
         whiteKingPosition2[0] = whiteKingPosition[0];
         whiteKingPosition2[1] = whiteKingPosition[1];
+        makeAnOpponentAttackMap();
         sideMove = !sideMove;
     }
     public void returnThePieces() {
@@ -883,18 +885,11 @@ public class Game {
 
     public ArrayList<int[]> legalMoves() {
         ArrayList<int[]> legalMoves = new ArrayList<>();
-        int counter = 0;
 
         for (Piece c: pieces) {
             if (c != null) {
                 if (c.black != sideMove) {
                     legalMoves.addAll(c.allPotentialMoves());
-                    /*startingPositions[counter][0] = c.x;
-                    startingPositions[counter][1] = c.y;
-                    startingPositions[counter][2] = c.type;
-                    counter++;
-
-                     */
                 }
             }
         }
@@ -904,25 +899,19 @@ public class Game {
             if (!ruleCheck(move[0], move[1], move[2], move[3])[0]) {
                 legalMoves.remove(i);
                 i--;
-                /*
-                if (ruleCheck(i[0], i[1], a, j)[1]) {
-                    legalMoves.remove(legalMoves.size() - 1);
-                    for (int c = 0; c < 4; c++) {
-                        move[4] = c;
-                        legalMoves.add(move.clone());
-                    }
-                    move[4] = 0;
-                }
-                 */
             }
         }
-
-
+        legalMoves.sort(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return myComparator(o1, o2);
+            }
+        });
         return legalMoves;
     }
     ArrayList<String> FENs = new ArrayList<>();
     public int countLegalPositions(int depth) {
-        ArrayList<int[]> moves = new ArrayList<>();
+        ArrayList<int[]> moves;
         if (depth == 0) {
             FENs.add(FEN);
             return 1;
@@ -943,6 +932,59 @@ public class Game {
         else {
             return kingInCheck(whiteKingPosition[0], whiteKingPosition[1], false);
         }
+    }
+    private void makeAnOpponentAttackMap() {
+        for (Piece c: pieces) {
+            if (c != null) {
+                if (c.black != sideMove) {
+                    opponentAttackMap.addAll(c.allPotentialMoves());
+                }
+            }
+        }
+
+        for (int i = 0; i < opponentAttackMap.size(); i++) {
+            move = opponentAttackMap.get(i);
+            if (move.length == 5) {
+                if (ruleCheck(move[0], move[1], move[2], move[3])[0]) {
+                    square[0] = move[2];
+                    square[1] = move[3];
+                    opponentAttackMap.add(square.clone());
+                }
+                opponentAttackMap.remove(i);
+                i--;
+            }
+        }
+
+    }
+    private boolean isCapture(int x, int y) {
+        return checkPiece(x, y);
+    }
+    private int myComparator (int[] move1, int[] move2) {
+        int evaluation1 = 0;
+        int evaluation2 = 0;
+        if (isCapture(move1[2], move1[3])) {
+            evaluation1 += 2;
+        }
+        if (isCapture(move2[2], move2[3])) {
+            evaluation2 += 2;
+        }
+        square[0] = move1[2];
+        square[1] = move1[3];
+        if (opponentAttackMap.contains(square)) {
+            evaluation1--;
+        }
+        square[0] = move2[2];
+        square[1] = move2[3];
+        if (opponentAttackMap.contains(square)) {
+            evaluation2--;
+        }
+        if (move1[4] != -1 && ((move1[1] == 1 && move1[3] == 0) || (move1[1] == 6 && move1[3] == 7))) {
+            evaluation1++;
+        }
+        if (move2[4] != -1 && ((move1[1] == 1 && move1[3] == 0) || (move1[1] == 6 && move1[3] == 7))) {
+            evaluation2++;
+        }
+        return -Integer.compare(evaluation1, evaluation2);
     }
 
 }

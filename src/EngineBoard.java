@@ -8,14 +8,14 @@ public class EngineBoard {
                 //System.out.println("--2");
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (Exception e) {
 
             }
             if (!board.position.isSideMove()) {
                 //int[] move = engine.returnMove2(board.position);
                 //board.makeMove(move[0], move[1], move[2], move[3], move[4]);
-                engine.recursiveEvaluation(3, -10000, 10000, 3);
+                engine.recursiveEvaluation(4, -10000, 10000, 4);
                 int[] move = engine.returnMove();
                 System.out.println(move[0] + " " + move[1] + " " + move[2] + " " + move[3] + " " + move[4]);
                 board.makeMove(move[0], move[1], move[2], move[3], move[4]);
