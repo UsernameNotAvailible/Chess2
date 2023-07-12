@@ -238,7 +238,7 @@ public class Board extends JFrame{
         }
     }
     public static void main(String[] args) {
-        Board chessBoard = new Board("4kb1r/p1pp1p1p/5p1n/3bq1NK/1r2P3/5B2/n4q2/8 b k - 3 39", 0);
+        Board chessBoard = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 0);
 
 
     }

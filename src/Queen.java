@@ -22,6 +22,7 @@ public class Queen extends Piece {
     }
     @Override
     protected ArrayList<int[]> allPotentialMoves() {
+        potentialMoves.clear();
         move[0] = x;
         move[1] = y;
         move[4] = -1;

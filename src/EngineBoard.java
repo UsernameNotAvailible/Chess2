@@ -8,7 +8,7 @@ public class EngineBoard {
                 //System.out.println("--2");
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (Exception e) {
 
             }

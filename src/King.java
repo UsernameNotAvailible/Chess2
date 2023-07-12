@@ -22,6 +22,7 @@ public class King extends Piece {
 
     @Override
     protected ArrayList<int[]> allPotentialMoves() {
+        potentialMoves.clear();
         move[0] = x;
         move[1] = y;
         move[4] = -1;
@@ -32,17 +33,22 @@ public class King extends Piece {
             if (y + 1 < 8) {
                 move[3] = y + 1;
                 potentialMoves.add(move.clone());
-                move[2] = x;
-                potentialMoves.add(move.clone());
 
             }
             if (y - 1 > -1) {
-                move[2] = x + 1;
                 move[3] = y - 1;
                 potentialMoves.add(move.clone());
-                move[2] = x;
-                potentialMoves.add(move.clone());
             }
+        }
+        if (y - 1 > -1) {
+            move[2] = x;
+            move[3] = y - 1;
+            potentialMoves.add(move.clone());
+        }
+        if (y + 1 < 8) {
+            move[2] = x;
+            move[3] = y + 1;
+            potentialMoves.add(move.clone());
         }
         if (x - 1 > -1) {
             move[2] = x - 1;

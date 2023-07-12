@@ -9,10 +9,8 @@ public class Bishop extends Piece {
 
     @Override
     protected void move(int x, int y) {
-        if (abs(this.x - x) == abs(this.y - y) && this.x != x) {
-            this.x = x;
-            this.y = y;
-        }
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -21,6 +19,7 @@ public class Bishop extends Piece {
     }
     @Override
     protected ArrayList<int[]> allPotentialMoves() {
+        potentialMoves.clear();
         move[0] = x;
         move[1] = y;
         move[4] = -1;

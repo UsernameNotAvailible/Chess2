@@ -24,7 +24,7 @@ class CreateFile {
 class WriteToFile {
     public static void main(String[] args) {
         var pos = new Game("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
-        int number = pos.countLegalPositions(4);
+        int number = pos.countLegalPositions(3);
         try {
             FileWriter myWriter = new FileWriter("FENStrings.txt");
             HashMap<String, Integer> repetitions = new HashMap<String, Integer>();

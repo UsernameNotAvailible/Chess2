@@ -9,7 +9,7 @@ public class Engine {
     private int queenWorth = 900;
     private int evaluationBlack = 0;
     private int evaluationWhite = 0;
-    private int evaluation;
+    //private int evaluation;
     private Random rand = new Random();
     int[] move = new int[5];
     private Game game = new Game("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -24,18 +24,29 @@ public class Engine {
                 if (c.black == side) {
                     if (c.type == 'p') {
                         evaluation += pawnWorth;
+                        if ((c.x == 3 || c.x == 4) && (c.y == 3 || c.y == 4)) {
+                            evaluation += 40;
+                        }
                     }
                     else if (c.type == 'r') {
                         evaluation += rookWorth;
                     }
                     else if (c.type == 'n') {
                         evaluation += knightWorth;
+                        if ((c.x >= 2 && c.x <= 5) && (c.y >= 2 && c.y <= 5)) {
+                            evaluation += 40;
+                        }
                     }
                     else if (c.type == 'b') {
                         evaluation += bishopWorth;
                     }
                     else if (c.type == 'q') {
                         evaluation += queenWorth;
+                    }
+                    else if (c.type == 'k') {
+                        if (c.x > 4 || c.x < 3) {
+                            evaluation += 20;
+                        }
                     }
                 }
             }
@@ -54,7 +65,7 @@ public class Engine {
     }
 
     public int recursiveEvaluation(int depth, int alpha, int beta, int start) {
-        if (depth == 0) { return evaluate2(game); }
+        if (depth == 0) { return recursiveCapturesEvaluation(-10000, 10000); }
 
         ArrayList<int[]> legalMoves = game.legalMoves();
         if (legalMoves.isEmpty()) {
@@ -77,6 +88,27 @@ public class Engine {
             alpha = max(alpha, evaluation);
         }
         return alpha;
+    }
+    public int recursiveCapturesEvaluation(int alpha, int beta) {
+        ArrayList<int[]> captureMoves = game.captureMoves();
+        int evaluation = evaluate2(game);
+
+        if (evaluation >= beta) {
+            return beta;
+        }
+
+        alpha = max(alpha, evaluation);
+        for (int[] move : captureMoves) {
+            game.makeMove(move[0], move[1], move[2], move[3], move[4]);
+            evaluation = -recursiveCapturesEvaluation(-beta, -alpha);
+            game.unmakeMove();
+            if (evaluation >= beta) {
+                return beta;
+            }
+            alpha = max(alpha, evaluation);
+        }
+        return alpha;
+
     }
 
     private int max(int a, int b) {

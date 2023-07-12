@@ -38,7 +38,16 @@ public class Game {
     private Piece movingPiece = null;
     private Piece pieceAtTheEnd = null;
     private Piece c;
-    
+    private int whitePawnCounter = 0;
+    private int blackPawnCounter = 0;
+    private int whiteRookCounter = 0;
+    private int blackRookCounter = 0;
+    private int whiteKnightCounter = 0;
+    private int blackKnightCounter = 0;
+    private int whiteBishopCounter = 0;
+    private int blackBishopCounter = 0;
+    private int whiteQueenCounter = 0;
+    private int blackQueenCounter = 0;
 
     public Piece[] getPieces() {
         return pieces;
@@ -69,6 +78,16 @@ public class Game {
     }
 
     private void FENReader(String FEN) {
+        blackPawnCounter = 0;
+        whitePawnCounter = 0;
+        blackRookCounter = 0;
+        whiteRookCounter = 0;
+        blackKnightCounter = 0;
+        whiteKnightCounter = 0;
+        blackBishopCounter = 0;
+        whiteBishopCounter = 0;
+        blackQueenCounter = 0;
+        whiteQueenCounter = 0;
         int x = 0;
         int y = 7;
         int pieceCounter = 0;
@@ -76,7 +95,7 @@ public class Game {
         int spaceCounter = 0;
         StringBuilder s = new StringBuilder();
         StringBuilder s1 = new StringBuilder();
-        castlingAvailability = new boolean[] {false, false, false, false};
+        castlingAvailability = NO_CASTLING;
         for (char i: FEN.toCharArray()) {
             if (contains(pieces, i) && spaceCounter == 0) {
                 create(i, pieceCounter, x, y);
@@ -115,18 +134,177 @@ public class Game {
         return false;
     }
     private void create(char piece, int pieceCounter, int x, int y) {
-        if (piece == 'r') {pieces[pieceCounter] = new Rook(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'n') {pieces[pieceCounter] = new Knight(x, y, true);/*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'b') {pieces[pieceCounter] = new Bishop(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'q') {pieces[pieceCounter] = new Queen(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'k') {pieces[pieceCounter] = new King(x, y, true); blackKingPosition[0] = x; blackKingPosition[1] = y; blackKingPosition2[0] = x; blackKingPosition2[1] = y;}
-        else if (piece == 'p') {pieces[pieceCounter] = new Pawn(x, y, true); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'R') {pieces[pieceCounter] = new Rook(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'N') {pieces[pieceCounter] = new Knight(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'B') {pieces[pieceCounter] = new Bishop(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'Q') {pieces[pieceCounter] = new Queen(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
-        else if (piece == 'K') {pieces[pieceCounter] = new King(x, y, false); whiteKingPosition[0] = x; whiteKingPosition[1] = y; whiteKingPosition2[0] = x; whiteKingPosition2[1] = y;}
-        else if (piece == 'P') {pieces[pieceCounter] = new Pawn(x, y, false); /*pieces[pieceCounter].move(x, y);*/}
+        if (piece == 'r') {
+            if (blackRookCounter == 0) {
+                pieces[pieceCounter] = BLACK_ROOK; pieces[pieceCounter].move(x, y);
+            }
+            else if (blackRookCounter == 1) {
+                pieces[pieceCounter] = BLACK_ROOK1; pieces[pieceCounter].move(x, y);
+            }
+            else {
+                pieces[pieceCounter] = new Rook(x, y, true);
+            }
+            blackRookCounter++;
+        }
+        else if (piece == 'n') {
+            if (blackKnightCounter == 0) {
+                pieces[pieceCounter] = BLACK_KNIGHT;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackKnightCounter == 1) {
+                pieces[pieceCounter] = BLACK_KNIGHT1;
+                pieces[pieceCounter].move(x, y);
+            } else {
+                pieces[pieceCounter] = new Knight(x, y, true);
+            }
+            blackKnightCounter++;
+        }
+        else if (piece == 'b') {
+            if (blackBishopCounter == 0) {
+                pieces[pieceCounter] = BLACK_BISHOP;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackBishopCounter == 1) {
+                pieces[pieceCounter] = BLACK_BISHOP1;
+                pieces[pieceCounter].move(x, y);
+            } else {
+                pieces[pieceCounter] = new Bishop(x, y, true);
+            }
+            blackBishopCounter++;
+        }
+        else if (piece == 'q') {
+            if (blackQueenCounter == 0) {
+                pieces[pieceCounter] = BLACK_QUEEN;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackQueenCounter == 1) {
+                pieces[pieceCounter] = BLACK_QUEEN1;
+                pieces[pieceCounter].move(x, y);
+            }
+            else {
+                pieces[pieceCounter] = new Queen(x, y, true);
+            }
+            blackQueenCounter++;
+        }
+        else if (piece == 'k') {
+            pieces[pieceCounter] = BLACK_KING;
+            pieces[pieceCounter].move(x, y);
+            blackKingPosition[0] = x; blackKingPosition[1] = y;
+            blackKingPosition2[0] = x; blackKingPosition2[1] = y;
+        }
+        else if (piece == 'p') {
+            if (blackPawnCounter == 0) {
+                pieces[pieceCounter] = BLACK_PAWN;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 1) {
+                pieces[pieceCounter] = BLACK_PAWN1;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 2) {
+                pieces[pieceCounter] = BLACK_PAWN2;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 3) {
+                pieces[pieceCounter] = BLACK_PAWN3;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 4) {
+                pieces[pieceCounter] = BLACK_PAWN4;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 5) {
+                pieces[pieceCounter] = BLACK_PAWN5;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 6) {
+                pieces[pieceCounter] = BLACK_PAWN6;
+                pieces[pieceCounter].move(x, y);
+            } else if (blackPawnCounter == 7) {
+                pieces[pieceCounter] = BLACK_PAWN7;
+                pieces[pieceCounter].move(x, y);
+            }
+            else {
+                pieces[pieceCounter] = new Pawn(x, y, true);
+            }
+            blackPawnCounter++;
+        }
+        else if (piece == 'R') {
+            if (whiteRookCounter == 0) {
+                pieces[pieceCounter] = WHITE_ROOK; pieces[pieceCounter].move(x, y);
+            }
+            else if (whiteRookCounter == 1) {
+                pieces[pieceCounter] = WHITE_ROOK1; pieces[pieceCounter].move(x, y);
+            }
+            else {
+                pieces[pieceCounter] = new Rook(x, y, false);
+            }
+            whiteRookCounter++;
+        }
+        else if (piece == 'N') {
+            if (whiteKnightCounter == 0) {
+                pieces[pieceCounter] = WHITE_KNIGHT;
+                pieces[pieceCounter].move(x, y);
+            } else if (whiteKnightCounter == 1) {
+                pieces[pieceCounter] = WHITE_KNIGHT1;
+                pieces[pieceCounter].move(x, y);
+            } else {
+                pieces[pieceCounter] = new Knight(x, y, false);
+            }
+            whiteKnightCounter++;
+        }
+        else if (piece == 'B') {
+            if (whiteBishopCounter == 0) {
+                pieces[pieceCounter] = WHITE_BISHOP;
+                pieces[pieceCounter].move(x, y);
+            } else if (whiteBishopCounter == 1) {
+                pieces[pieceCounter] = WHITE_BISHOP1;
+                pieces[pieceCounter].move(x, y);
+            } else {
+                pieces[pieceCounter] = new Bishop(x, y, false);
+            }
+            whiteBishopCounter++;
+        }
+        else if (piece == 'Q') {
+            if (whiteQueenCounter == 0) {
+                pieces[pieceCounter] = WHITE_QUEEN;
+                pieces[pieceCounter].move(x, y);
+            } else if (whiteQueenCounter == 1) {
+            pieces[pieceCounter] = WHITE_QUEEN1;
+                pieces[pieceCounter].move(x, y);
+            }else {
+                pieces[pieceCounter] = new Queen(x, y, false);
+            }
+            whiteQueenCounter++;
+        }
+        else if (piece == 'K') {
+            pieces[pieceCounter] = WHITE_KING;
+            pieces[pieceCounter].move(x, y);
+            whiteKingPosition[0] = x; whiteKingPosition[1] = y;
+            whiteKingPosition2[0] = x; whiteKingPosition2[1] = y;
+        }
+        else if (piece == 'P') {
+            if (whitePawnCounter == 0) {
+                pieces[pieceCounter] = WHITE_PAWN;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 1) {
+                pieces[pieceCounter] = WHITE_PAWN1;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 2) {
+                pieces[pieceCounter] = WHITE_PAWN2;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 3) {
+                pieces[pieceCounter] = WHITE_PAWN3;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 4) {
+                pieces[pieceCounter] = WHITE_PAWN4;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 5) {
+                pieces[pieceCounter] = WHITE_PAWN5;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 6) {
+                pieces[pieceCounter] = WHITE_PAWN6;
+                pieces[pieceCounter].move(x, y);
+            } else if (whitePawnCounter == 7) {
+                pieces[pieceCounter] = WHITE_PAWN7;
+                pieces[pieceCounter].move(x, y);
+            }
+            else {
+                pieces[pieceCounter] = new Pawn(x, y, true);
+            }
+            whitePawnCounter++;
+        }
     }
     private void determineMove (char i) {
         if (i == 'w') {sideMove = true;}
@@ -752,44 +930,181 @@ public class Game {
         blackKingPosition2[1] = blackKingPosition[1];
         whiteKingPosition2[0] = whiteKingPosition[0];
         whiteKingPosition2[1] = whiteKingPosition[1];
-        makeAnOpponentAttackMap();
+        //makeAnOpponentAttackMap();
         sideMove = !sideMove;
     }
     public void returnThePieces() {
+        blackKnightCounter = 0;
+        blackQueenCounter = 0;
+        blackPawnCounter = 0;
+        blackBishopCounter = 0;
+        blackRookCounter = 0;
+        whiteBishopCounter = 0;
+        whiteKnightCounter = 0;
+        whiteRookCounter = 0;
+        whitePawnCounter = 0;
+        whiteQueenCounter = 0;
         int counter = 0;
         voidPieces();
         for (Piece piece: pieces2) {
             if (piece != null) {
                 if (piece.black) {
                     if (piece.type == 'r') {
-                        pieces[counter] = new Rook(piece.x, piece.y, true);
-                        //pieces[counter].move(piece.x, piece.y);
+                        if (blackRookCounter == 0) {
+                            pieces[counter] = BLACK_ROOK; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackRookCounter == 1) {
+                            pieces[counter] = BLACK_ROOK1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Rook(piece.x, piece.y, true);
+                        }
+                        blackRookCounter++;
                     } else if (piece.type == 'n') {
-                        pieces[counter] = new Knight(piece.x, piece.y, true);
-                        //pieces[counter].move(piece.x, piece.y);
+                        if (blackKnightCounter == 0) {
+                            pieces[counter] = BLACK_KNIGHT; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackKnightCounter == 1) {
+                            pieces[counter] = BLACK_KNIGHT1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Knight(piece.x, piece.y, true);
+                        }
+                        blackKnightCounter++;
                     } else if (piece.type == 'b') {
-                        pieces[counter] = new Bishop(piece.x, piece.y, true);
-                        //pieces[counter].move(piece.x, piece.y);
+                        if (blackBishopCounter == 0) {
+                            pieces[counter] = BLACK_BISHOP; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackBishopCounter == 1) {
+                            pieces[counter] = BLACK_BISHOP1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Bishop(piece.x, piece.y, true);
+                        }
+                        blackBishopCounter++;
                     } else if (piece.type == 'q') {
-                        pieces[counter] = new Queen(piece.x, piece.y, true);
+                        if (blackQueenCounter == 0) {
+                            pieces[counter] = BLACK_QUEEN; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackQueenCounter == 1) {
+                            pieces[counter] = BLACK_QUEEN1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Queen(piece.x, piece.y, true);
+                        }
+                        blackQueenCounter++;
                     } else if (piece.type == 'k') {
-                        pieces[counter] = new King(piece.x, piece.y, true);
+                        pieces[counter] = BLACK_KING;
+                        pieces[counter].move(piece.x, piece.y);
+
                     } else if (piece.type == 'p') {
-                        pieces[counter] = new Pawn(piece.x, piece.y, true);
+                        if (blackPawnCounter == 0) {
+                            pieces[counter] = BLACK_PAWN; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 1) {
+                            pieces[counter] = BLACK_PAWN1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 2) {
+                            pieces[counter] = BLACK_PAWN2; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 3) {
+                            pieces[counter] = BLACK_PAWN3; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 4) {
+                            pieces[counter] = BLACK_PAWN4; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 5) {
+                            pieces[counter] = BLACK_PAWN5; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 6) {
+                            pieces[counter] = BLACK_PAWN6; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 7) {
+                            pieces[counter] = BLACK_PAWN7; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Pawn(piece.x, piece.y, true);
+                        }
+                        blackPawnCounter++;
                     }
                 } else {
                     if (piece.type == 'r') {
-                        pieces[counter] = new Rook(piece.x,piece.y, false);
+                        if (whiteRookCounter == 0) {
+                            pieces[counter] = WHITE_ROOK; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteRookCounter == 1) {
+                            pieces[counter] = WHITE_ROOK1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Rook(piece.x, piece.y, false);
+                        }
+                        whiteRookCounter++;
                     } else if (piece.type == 'n') {
-                        pieces[counter] = new Knight(piece.x,piece.y, false);
+                        if (whiteKnightCounter == 0) {
+                            pieces[counter] = WHITE_KNIGHT; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteKnightCounter == 1) {
+                            pieces[counter] = WHITE_KNIGHT1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Knight(piece.x, piece.y, false);
+                        }
+                        whiteKnightCounter++;
                     } else if (piece.type == 'b') {
-                        pieces[counter] = new Bishop(piece.x,piece.y, false);
+                        if (whiteBishopCounter == 0) {
+                            pieces[counter] = WHITE_BISHOP; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteBishopCounter == 1) {
+                            pieces[counter] = WHITE_BISHOP1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Bishop(piece.x, piece.y, false);
+                        }
+                        whiteBishopCounter++;
                     } else if (piece.type == 'q') {
-                        pieces[counter] = new Queen(piece.x,piece.y, false);
+                        if (whiteQueenCounter == 0) {
+                            pieces[counter] = WHITE_QUEEN; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteQueenCounter == 1) {
+                            pieces[counter] = WHITE_QUEEN1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Queen(piece.x, piece.y, false);
+                        }
+                        whiteQueenCounter++;
                     } else if (piece.type == 'k') {
-                        pieces[counter] = new King(piece.x,piece.y, false);
+                        pieces[counter] = WHITE_KING;
+                        pieces[counter].move(piece.x, piece.y);
+
                     } else if (piece.type == 'p') {
-                        pieces[counter] = new Pawn(piece.x,piece.y, false);
+                        if (whitePawnCounter == 0) {
+                            pieces[counter] = WHITE_PAWN; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 1) {
+                            pieces[counter] = WHITE_PAWN1; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 2) {
+                            pieces[counter] = WHITE_PAWN2; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 3) {
+                            pieces[counter] = WHITE_PAWN3; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 4) {
+                            pieces[counter] = WHITE_PAWN4; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 5) {
+                            pieces[counter] = WHITE_PAWN5; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 6) {
+                            pieces[counter] = WHITE_PAWN6; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 7) {
+                            pieces[counter] = WHITE_PAWN7; pieces[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces[counter] = new Pawn(piece.x, piece.y, false);
+                        }
+                        whitePawnCounter++;
                     }
                 }
                 counter++;
@@ -797,37 +1112,177 @@ public class Game {
         }
     }
     public void copyPieces() {
+        blackKnightCounter = 0;
+        blackQueenCounter = 0;
+        blackPawnCounter = 0;
+        blackBishopCounter = 0;
+        blackRookCounter = 0;
+        whiteBishopCounter = 0;
+        whiteKnightCounter = 0;
+        whiteRookCounter = 0;
+        whitePawnCounter = 0;
+        whiteQueenCounter = 0;
         int counter = 0;
         voidPieces2();
         for (Piece piece: pieces) {
             if (piece != null) {
                 if (piece.black) {
                     if (piece.type == 'r') {
-                        pieces2[counter] = new Rook(piece.x, piece.y, true);
+                        if (blackRookCounter == 0) {
+                            pieces2[counter] = BLACK_ROOK_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackRookCounter == 1) {
+                            pieces2[counter] = BLACK_ROOK_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Rook(piece.x, piece.y, true);
+                        }
+                        blackRookCounter++;
                     } else if (piece.type == 'n') {
-                        pieces2[counter] = new Knight(piece.x, piece.y, true);
+                        if (blackKnightCounter == 0) {
+                            pieces2[counter] = BLACK_KNIGHT_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackKnightCounter == 1) {
+                            pieces2[counter] = BLACK_KNIGHT_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Knight(piece.x, piece.y, true);
+                        }
+                        blackKnightCounter++;
                     } else if (piece.type == 'b') {
-                        pieces2[counter] = new Bishop(piece.x, piece.y, true);
+                        if (blackBishopCounter == 0) {
+                            pieces2[counter] = BLACK_BISHOP_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackBishopCounter == 1) {
+                            pieces2[counter] = BLACK_BISHOP_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Bishop(piece.x, piece.y, true);
+                        }
+                        blackBishopCounter++;
                     } else if (piece.type == 'q') {
-                        pieces2[counter] = new Queen(piece.x, piece.y, true);
+                        if (blackQueenCounter == 0) {
+                            pieces2[counter] = BLACK_QUEEN_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackQueenCounter == 1) {
+                            pieces2[counter] = BLACK_QUEEN_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Queen(piece.x, piece.y, true);
+                        }
+                        blackQueenCounter++;
                     } else if (piece.type == 'k') {
-                        pieces2[counter] = new King(piece.x, piece.y, true);
+                        pieces2[counter] = BLACK_KING_SPARE;
+                        pieces2[counter].move(piece.x, piece.y);
+
                     } else if (piece.type == 'p') {
-                        pieces2[counter] = new Pawn(piece.x, piece.y, true);
+                        if (blackPawnCounter == 0) {
+                            pieces2[counter] = BLACK_PAWN_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 1) {
+                            pieces2[counter] = BLACK_PAWN_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 2) {
+                            pieces2[counter] = BLACK_PAWN_SPARE2; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 3) {
+                            pieces2[counter] = BLACK_PAWN_SPARE3; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 4) {
+                            pieces2[counter] = BLACK_PAWN_SPARE4; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 5) {
+                            pieces2[counter] = BLACK_PAWN_SPARE5; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 6) {
+                            pieces2[counter] = BLACK_PAWN_SPARE6; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (blackPawnCounter == 7) {
+                            pieces2[counter] = BLACK_PAWN_SPARE7; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Pawn(piece.x, piece.y, true);
+                        }
+                        blackPawnCounter++;
                     }
                 } else {
                     if (piece.type == 'r') {
-                        pieces2[counter] = new Rook(piece.x, piece.y, false);
+                        if (whiteRookCounter == 0) {
+                            pieces2[counter] = WHITE_ROOK_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteRookCounter == 1) {
+                            pieces2[counter] = WHITE_ROOK_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Rook(piece.x, piece.y, false);
+                        }
+                        whiteRookCounter++;
                     } else if (piece.type == 'n') {
-                        pieces2[counter] = new Knight(piece.x, piece.y, false);
+                        if (whiteKnightCounter == 0) {
+                            pieces2[counter] = WHITE_KNIGHT_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteKnightCounter == 1) {
+                            pieces2[counter] = WHITE_KNIGHT_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Knight(piece.x, piece.y, false);
+                        }
+                        whiteKnightCounter++;
                     } else if (piece.type == 'b') {
-                        pieces2[counter] = new Bishop(piece.x, piece.y, false);
+                        if (whiteBishopCounter == 0) {
+                            pieces2[counter] = WHITE_BISHOP_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteBishopCounter == 1) {
+                            pieces2[counter] = WHITE_BISHOP_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Bishop(piece.x, piece.y, false);
+                        }
+                        whiteBishopCounter++;
                     } else if (piece.type == 'q') {
-                        pieces2[counter] = new Queen(piece.x, piece.y, false);
+                        if (whiteQueenCounter == 0) {
+                            pieces2[counter] = WHITE_QUEEN_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whiteQueenCounter == 1) {
+                            pieces2[counter] = WHITE_QUEEN_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Queen(piece.x, piece.y, false);
+                        }
+                        whiteQueenCounter++;
                     } else if (piece.type == 'k') {
-                        pieces2[counter] = new King(piece.x, piece.y, false);
+                        pieces2[counter] = WHITE_KING_SPARE;
+                        pieces2[counter].move(piece.x, piece.y);
+
                     } else if (piece.type == 'p') {
-                        pieces2[counter] = new Pawn(piece.x, piece.y, false);
+                        if (whitePawnCounter == 0) {
+                            pieces2[counter] = WHITE_PAWN_SPARE; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 1) {
+                            pieces2[counter] = WHITE_PAWN_SPARE1; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 2) {
+                            pieces2[counter] = WHITE_PAWN_SPARE2; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 3) {
+                            pieces2[counter] = WHITE_PAWN_SPARE3; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 4) {
+                            pieces2[counter] = WHITE_PAWN_SPARE4; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 5) {
+                            pieces2[counter] = WHITE_PAWN_SPARE5; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 6) {
+                            pieces2[counter] = WHITE_PAWN_SPARE6; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else if (whitePawnCounter == 7) {
+                            pieces2[counter] = WHITE_PAWN_SPARE7; pieces2[counter].move(piece.x, piece.y);
+                        }
+                        else {
+                            pieces2[counter] = new Pawn(piece.x, piece.y, false);
+                        }
+                        whitePawnCounter++;
                     }
                 }
                 counter++;
@@ -835,7 +1290,6 @@ public class Game {
         }
     }
     public void makeMove(int xStart, int yStart, int xEnd, int yEnd, int type) {
-        //ruleCheck(xStart, yStart, xEnd, yEnd);
         /*move[0] = xStart;
         move[1] = yStart;
         move[2] = xEnd;
@@ -843,11 +1297,12 @@ public class Game {
         move[4] = type;
         moves.push(move);
         if (isCapture) {
-            capturedPieces.push(pieceAtTheEnd);
+            capturedpush(pieceAtTheEnd);
         }
         else {
-            capturedPieces.push(null);
+            capturedpush(null);
         }*/
+        //boolean[] check = ruleCheck(xStart, yStart, xEnd, yEnd);
         FENStack.push(FEN);
         updateProperties(xStart, yStart, xEnd, yEnd, type);
         FEN = makeFEN();
@@ -864,7 +1319,7 @@ public class Game {
         FEN = FENStack.pop();
         FENReader(FEN);
         /*move = moves.pop();
-        c = capturedPieces.pop();
+        c = capturedpop();
         movingPiece = findPiece(move[2], move[3]);
         movingPiece.move(move[0], move[1]);
         for (int i = 0; i < 32; i++) {
@@ -901,6 +1356,7 @@ public class Game {
                 i--;
             }
         }
+
         legalMoves.sort(new Comparator<int[]>() {
             @Override
             public int compare(int[] o1, int[] o2) {
@@ -908,6 +1364,26 @@ public class Game {
             }
         });
         return legalMoves;
+    }
+    public ArrayList<int[]> captureMoves() {
+        ArrayList<int[]> captureMoves = new ArrayList<>();
+
+        for (Piece c: pieces) {
+            if (c != null) {
+                if (c.black != sideMove) {
+                    captureMoves.addAll(c.allPotentialMoves());
+                }
+            }
+        }
+
+        for (int i = 0; i < captureMoves.size(); i++) {
+            move = captureMoves.get(i);
+            if (!ruleCheck(move[0], move[1], move[2], move[3])[0] || !isCapture) {
+                captureMoves.remove(i);
+                i--;
+            }
+        }
+        return captureMoves;
     }
     ArrayList<String> FENs = new ArrayList<>();
     public int countLegalPositions(int depth) {
@@ -956,7 +1432,7 @@ public class Game {
         }
 
     }
-    private boolean isCapture(int x, int y) {
+    public boolean isCapture(int x, int y) {
         return checkPiece(x, y);
     }
     private int myComparator (int[] move1, int[] move2) {
@@ -968,6 +1444,7 @@ public class Game {
         if (isCapture(move2[2], move2[3])) {
             evaluation2 += 2;
         }
+        /*
         square[0] = move1[2];
         square[1] = move1[3];
         if (opponentAttackMap.contains(square)) {
@@ -978,13 +1455,90 @@ public class Game {
         if (opponentAttackMap.contains(square)) {
             evaluation2--;
         }
+
+         */
         if (move1[4] != -1 && ((move1[1] == 1 && move1[3] == 0) || (move1[1] == 6 && move1[3] == 7))) {
             evaluation1++;
         }
-        if (move2[4] != -1 && ((move1[1] == 1 && move1[3] == 0) || (move1[1] == 6 && move1[3] == 7))) {
+        if (move2[4] != -1 && ((move2[1] == 1 && move2[3] == 0) || (move2[1] == 6 && move2[3] == 7))) {
             evaluation2++;
         }
         return -Integer.compare(evaluation1, evaluation2);
     }
+    public  Piece BLACK_PAWN = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN1 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN2 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN3 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN4 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN5 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN6 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN7 = new Pawn(-1, -1, true);
+    public  Piece BLACK_ROOK = new Rook(-1, -1, true);
+    public  Piece BLACK_ROOK1 = new Rook(-1, -1, true);
+    public  Piece BLACK_KNIGHT = new Knight(-1, -1, true);
+    public  Piece BLACK_KNIGHT1 = new Knight(-1, -1, true);
+    public  Piece BLACK_BISHOP = new Bishop(-1, -1, true);
+    public  Piece BLACK_BISHOP1 = new Bishop(-1, -1, true);
+    public  Piece BLACK_QUEEN = new Queen(-1, -1, true);
+    public  Piece BLACK_QUEEN1 = new Queen(-1, -1, true);
+    public  Piece BLACK_KING = new King(-1, -1, true);
+    // __________________________________________________________
+    public  Piece WHITE_PAWN = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN1 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN2 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN3 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN4 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN5 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN6 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN7 = new Pawn(-1, -1, false);
+
+    public  Piece WHITE_ROOK = new Rook(-1, -1, false);
+    public  Piece WHITE_ROOK1 = new Rook(-1, -1, false);
+    public  Piece WHITE_KNIGHT = new Knight(-1, -1, false);
+    public  Piece WHITE_KNIGHT1 = new Knight(-1, -1, false);
+    public  Piece WHITE_BISHOP = new Bishop(-1, -1, false);
+    public  Piece WHITE_BISHOP1 = new Bishop(-1, -1, false);
+    public  Piece WHITE_QUEEN = new Queen(-1, -1, false);
+    public  Piece WHITE_QUEEN1 = new Queen(-1, -1, false);
+    public  Piece WHITE_KING = new King(-1, -1, false);
+    // __________________________________________________________
+    public  Piece BLACK_PAWN_SPARE = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE1 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE2 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE3 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE4 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE5 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE6 = new Pawn(-1, -1, true);
+    public  Piece BLACK_PAWN_SPARE7 = new Pawn(-1, -1, true);
+
+
+    public  Piece BLACK_ROOK_SPARE = new Rook(-1, -1, true);
+    public  Piece BLACK_ROOK_SPARE1 = new Rook(-1, -1, true);
+    public  Piece BLACK_KNIGHT_SPARE = new Knight(-1, -1, true);
+    public  Piece BLACK_KNIGHT_SPARE1 = new Knight(-1, -1, true);
+    public  Piece BLACK_BISHOP_SPARE = new Bishop(-1, -1, true);
+    public  Piece BLACK_BISHOP_SPARE1 = new Bishop(-1, -1, true);
+    public  Piece BLACK_QUEEN_SPARE = new Queen(-1, -1, true);
+    public  Piece BLACK_QUEEN_SPARE1 = new Queen(-1, -1, true);
+    public  Piece BLACK_KING_SPARE = new King(-1, -1, true);
+    // __________________________________________________________
+    public  Piece WHITE_PAWN_SPARE = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE1 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE2 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE3 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE4 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE5 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE6 = new Pawn(-1, -1, false);
+    public  Piece WHITE_PAWN_SPARE7 = new Pawn(-1, -1, false);
+
+    public  Piece WHITE_ROOK_SPARE = new Rook(-1, -1, false);
+    public  Piece WHITE_ROOK_SPARE1 = new Rook(-1, -1, false);
+    public  Piece WHITE_KNIGHT_SPARE = new Knight(-1, -1, false);
+    public  Piece WHITE_KNIGHT_SPARE1 = new Knight(-1, -1, false);
+    public  Piece WHITE_BISHOP_SPARE = new Bishop(-1, -1, false);
+    public  Piece WHITE_BISHOP_SPARE1 = new Bishop(-1, -1, false);
+    public  Piece WHITE_QUEEN_SPARE = new Queen(-1, -1, false);
+    public  Piece WHITE_QUEEN_SPARE1 = new Queen(-1, -1, false);
+    public  Piece WHITE_KING_SPARE = new King(-1, -1, false);
 
 }
