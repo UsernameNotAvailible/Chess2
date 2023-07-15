@@ -23,22 +23,28 @@ public class Board extends JFrame{
     private JDialog promotionDialogueBlack = new JDialog();
     private JPanel buttonPanel = new JPanel();
     private JButton[] bottomButtons = new JButton[4];
+    private Engine engine;
     //private Engine engine = new Engine();
     private Color colour = Color.DARK_GRAY;
-    private int ENGINE_ENABLED;
+    public static boolean ENGINE_ENABLED = true;
+    public static boolean ENGINE_DISABLED = false;
+    private boolean engineEnabled;
     private int AUTOQUEEN = 0;
     public int[] getMove() {
         return new int[] {xStart, yStart, xEnd, yEnd};
     }
 
     //Scanner scanner = new Scanner();
-    Board(String FEN, int ENGINE_ENABLED) {
+    public Board(String FEN, boolean engineEnabled) {
         super("chess board");
-        this.ENGINE_ENABLED = ENGINE_ENABLED;
+        this.engineEnabled = engineEnabled;
         position = new Game(FEN);
         setLayout(new BorderLayout());
         chessBoard = new JPanel();
         chessBoard.setLayout(new GridLayout(8, 8));
+        if (engineEnabled) {
+            engine = new Engine(FEN);
+        }
         //promotionDialogue.setLayout(new GridLayout(4,1));
         //setLayout(new GridLayout(8, 8));
         ActionListener1 buttonHandler = new ActionListener1();
@@ -96,6 +102,20 @@ public class Board extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPieces(position.getPieces());
         setVisible(true);
+        while (this.engineEnabled) { // position.legalMoves().size() != 0
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+            System.out.println(this.engineEnabled);
+            if (!position.isSideMove()) {
+                engine.recursiveEvaluation(4, -15000, 15000, 4);
+                int[] move = engine.returnMove();
+                System.out.println(move[0] + " " + move[1] + " " + move[2] + " " + move[3] + " " + move[4]);
+                makeMove(move[0], move[1], move[2], move[3], move[4]);
+                engine.makeMove(move);
+            }
+        }
     }
     private void resetPieces() {
         for (int i = 0; i < 8; i++) {
@@ -107,6 +127,7 @@ public class Board extends JFrame{
     }
     public void makeMove (int xStart, int yStart, int xEnd, int yEnd, int pawn) {
         boolean[] moveLegality = position.ruleCheck(xStart, yStart, xEnd, yEnd);
+
         if (moveLegality[0]) {
 
             if (moveLegality[1] && pawn == -1) {
@@ -121,7 +142,11 @@ public class Board extends JFrame{
             else {
                 this.pawn = pawn;
             }
-
+            if (engineEnabled) {
+                if (position.isSideMove()) {
+                    engine.makeMove(xStart, yStart, xEnd, yEnd, pawn);
+                }
+            }
             position.makeMove(xStart, yStart, xEnd, yEnd, this.pawn);
             //position.updatePieceList();
             resetPieces();
@@ -187,9 +212,12 @@ public class Board extends JFrame{
             }
             Object source = e.getSource();
             for (int i = 0; i < 4; i++) {
-                if (source == bottomButtons[i]) {
+                if (source == bottomButtons[0]) {
                     position.unmakeMove();
                     resetPieces();
+                }
+                if (source == bottomButtons[3]) {
+                    engineEnabled = false;
                 }
             }
 
@@ -238,7 +266,7 @@ public class Board extends JFrame{
         }
     }
     public static void main(String[] args) {
-        Board chessBoard = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 0);
+        Board chessBoard = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ENGINE_DISABLED);
 
 
     }

@@ -70,7 +70,7 @@ class GameTest {
 
     @org.junit.jupiter.api.Test
     void legalMoves() {
-        var game = new Game("rnb2k1r/pp1Pbppp/2p5/q7/2B5/7P/PPP1NnP1/RNBQK2R w KQ - 1 9");
+        var game = new Game("1R2Qb1r/p1pk2pp/2p2p2/8/3P4/2r5/P5PP/7K b - - 7 25");
         ArrayList<int[]> moves = game.legalMoves();
     }
 

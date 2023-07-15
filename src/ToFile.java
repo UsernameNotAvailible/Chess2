@@ -21,7 +21,7 @@ class CreateFile {
         }
     }
 }
-class WriteToFile {
+/*class WriteToFile {
     public static void main(String[] args) {
         var pos = new Game("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
         int number = pos.countLegalPositions(3);
@@ -45,3 +45,5 @@ class WriteToFile {
         }
     }
 }
+
+ */

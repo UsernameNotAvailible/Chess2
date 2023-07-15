@@ -4,13 +4,15 @@ import static java.lang.Math.*;
 
 public class Game {
     //private ArrayList<int[]> legalMoves = new ArrayList<>();
-    private ArrayList<int[]> opponentAttackMap = new ArrayList<>();
+    //private ArrayList<int[]> opponentAttackMap = new ArrayList<>();
     //private Stack<Piece> capturedPieces = new Stack<>();
     //private Stack<int[]> moves = new Stack<>();
     private Stack<String> FENStack = new Stack<>();
+    HashMap<String, Integer> FENsHashMap = new HashMap<String, Integer>();
     private Piece[] pieces = new Piece[32];
     private Piece[] pieces2 = new Piece[32];
     private String FEN;
+    private String FENtrimmed;
     private int[] enpassantSquare = new int[2];
     private boolean sideMove;
     private int halfMoveCounter;
@@ -48,6 +50,23 @@ public class Game {
     private int blackBishopCounter = 0;
     private int whiteQueenCounter = 0;
     private int blackQueenCounter = 0;
+    private int pieceCounter = 0;
+    private int positionCounter = 1;
+
+    StringBuilder s = new StringBuilder();
+    StringBuilder s1 = new StringBuilder();
+    StringBuilder s2 = new StringBuilder();
+
+    public int getPieceCounter() {
+        return pieceCounter;
+    }
+    public int getHalfMoveCounter() {
+        return halfMoveCounter;
+    }
+
+    public int getPositionCounter() {
+        return positionCounter;
+    }
 
     public Piece[] getPieces() {
         return pieces;
@@ -90,21 +109,28 @@ public class Game {
         whiteQueenCounter = 0;
         int x = 0;
         int y = 7;
-        int pieceCounter = 0;
+        pieceCounter = 0;
         char[] pieces = {'r', 'n', 'b', 'q', 'k', 'p', 'R', 'N', 'B', 'Q', 'K', 'P'};
         int spaceCounter = 0;
-        StringBuilder s = new StringBuilder();
+        s.delete(0, s.length());
+        s1.delete(0, s1.length());
+        s2.delete(0, s2.length());
         StringBuilder s1 = new StringBuilder();
-        castlingAvailability = NO_CASTLING;
+        StringBuilder s2 = new StringBuilder();
+        castlingAvailability = NO_CASTLING.clone();
         for (char i: FEN.toCharArray()) {
             if (contains(pieces, i) && spaceCounter == 0) {
                 create(i, pieceCounter, x, y);
                 pieceCounter++;
+                s2.append(i);
             }
             else if (i < 57 && i > 47) {
                 x += Integer.parseInt(String.valueOf(i)) - 1;
+                if (spaceCounter == 0) {
+                    s2.append(i);
+                }
             }
-            if (i == '/') {x--; y--;}
+            if (i == '/') {x--; y--; s2.append(i);}
             x = (x + 1)%8;
             if (i == ' ') {spaceCounter++;}
             if (spaceCounter == 1) {determineMove(i);}
@@ -124,8 +150,9 @@ public class Game {
                 s1.append(i);
             }
         }
-        halfMoveCounter = Integer.parseInt(s.reverse().toString().trim());
-        fullMoveCounter = Integer.parseInt(s1.reverse().toString().trim());
+        halfMoveCounter = Integer.parseInt(s.toString().trim());
+        fullMoveCounter = Integer.parseInt(s1.toString().trim());
+        FENtrimmed = s2.toString();
     }
     private boolean contains(char[] array, char a) {
         for (char i: array) {
@@ -322,10 +349,10 @@ public class Game {
     public String makeFEN() {
         char[][] piecesArray = new char[8][8];
         int[] gaps = new int[40];
-        int slashCounter = 0;
         int nonNullCounter = 0;
         int counter = 0;
-        StringBuilder s = new StringBuilder();
+        s.delete(0, s.length());
+        s1.delete(0, s1.length());
         for (Piece c: pieces) {
             if (c != null && c.x != -1) {
                 if (c.black) {
@@ -369,6 +396,7 @@ public class Game {
             }
             counter++;
         }
+        s1.append(s);
         s.append(' ');
         if (sideMove) {
             s.append('w');
@@ -406,7 +434,7 @@ public class Game {
         s.append(halfMoveCounter);
         s.append(' ');
         s.append(fullMoveCounter);
-
+        FENtrimmed = s1.toString();
         return s.toString();
     }
     // Methods to check rules
@@ -515,6 +543,7 @@ public class Game {
         for (int i = 0; i < 32; i++) {
             if (pieces[i] != null && pieces[i].x == x && pieces[i].y == y && (pieces[i].black == black)) {
                 pieces[i] = null;
+                pieceCounter--;
                 return;
             }
         }
@@ -1303,11 +1332,22 @@ public class Game {
             capturedpush(null);
         }*/
         //boolean[] check = ruleCheck(xStart, yStart, xEnd, yEnd);
+
         FENStack.push(FEN);
+        //positionCounter = 0;
+        if (!FENsHashMap.containsKey(FENtrimmed)) {
+            FENsHashMap.put(FENtrimmed, 1);
+            positionCounter = 1;
+        }
+        else {
+            FENsHashMap.put(FENtrimmed, FENsHashMap.get(FENtrimmed) + 1);
+            positionCounter = FENsHashMap.get(FENtrimmed);
+        }
         updateProperties(xStart, yStart, xEnd, yEnd, type);
         FEN = makeFEN();
 
     }
+
     public Game(String FEN) {
         FENReader(FEN);
         this.FEN = FEN;
@@ -1318,6 +1358,9 @@ public class Game {
     public void unmakeMove() {
         FEN = FENStack.pop();
         FENReader(FEN);
+        if (FENsHashMap.get(FENtrimmed) != null) {
+            FENsHashMap.put(FENtrimmed, FENsHashMap.get(FENtrimmed) - 1);
+        }
         /*move = moves.pop();
         c = capturedpop();
         movingPiece = findPiece(move[2], move[3]);
@@ -1385,11 +1428,11 @@ public class Game {
         }
         return captureMoves;
     }
-    ArrayList<String> FENs = new ArrayList<>();
+    //ArrayList<String> FENs = new ArrayList<>();
     public int countLegalPositions(int depth) {
         ArrayList<int[]> moves;
         if (depth == 0) {
-            FENs.add(FEN);
+            //FENs.add(FEN);
             return 1;
         }
         int number1 = 0;
@@ -1409,7 +1452,9 @@ public class Game {
             return kingInCheck(whiteKingPosition[0], whiteKingPosition[1], false);
         }
     }
-    private void makeAnOpponentAttackMap() {
+
+
+    /*private void makeAnOpponentAttackMap() {
         for (Piece c: pieces) {
             if (c != null) {
                 if (c.black != sideMove) {
@@ -1432,6 +1477,8 @@ public class Game {
         }
 
     }
+
+     */
     public boolean isCapture(int x, int y) {
         return checkPiece(x, y);
     }
@@ -1457,10 +1504,10 @@ public class Game {
         }
 
          */
-        if (move1[4] != -1 && ((move1[1] == 1 && move1[3] == 0) || (move1[1] == 6 && move1[3] == 7))) {
+        if (move1[4] != -1 && ((move1[1] == 1 && move1[3] == 0) || (move1[1] == 6 && move1[3] == 7) || (move1[1] == 3 || move1[1] == 4))) {
             evaluation1++;
         }
-        if (move2[4] != -1 && ((move2[1] == 1 && move2[3] == 0) || (move2[1] == 6 && move2[3] == 7))) {
+        if (move2[4] != -1 && ((move2[1] == 1 && move2[3] == 0) || (move2[1] == 6 && move2[3] == 7) || (move2[1] == 3 || move2[1] == 4))) {
             evaluation2++;
         }
         return -Integer.compare(evaluation1, evaluation2);

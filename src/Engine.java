@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.Math.*;
+
 public class Engine {
     private int pawnWorth = 100;
     private int rookWorth = 500;
@@ -12,14 +14,21 @@ public class Engine {
     //private int evaluation;
     private Random rand = new Random();
     int[] move = new int[5];
-    private Game game = new Game("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    private Game game;
     public void makeMove (int[] move) {
         game.makeMove(move[0], move[1], move[2], move[3], move[4]);
+    }
+    public void makeMove (int xStart, int yStart, int xEnd, int yEnd, int pawn) {
+        game.makeMove(xStart, yStart, xEnd, yEnd, pawn);
     }
 
     private int evaluate(Game position, boolean side) {
         int evaluation = 0;
-        for (Piece c: position.getPieces()) {
+        Piece[] pieces = position.getPieces();
+        int pieceCounter = position.getPieceCounter();
+        int[] bKing = game.getBlackKingPosition();
+        int[] wKing = game.getWhiteKingPosition();
+        for (Piece c: pieces) {
             if (c != null) {
                 if (c.black == side) {
                     if (c.type == 'p') {
@@ -44,14 +53,27 @@ public class Engine {
                         evaluation += queenWorth;
                     }
                     else if (c.type == 'k') {
-                        if (c.x > 4 || c.x < 3) {
-                            evaluation += 20;
+                        if (c.black && (c.x > 5 || c.x < 3) && c.y == 7) {
+                            evaluation += 40;
+                        }
+                        else if (!c.black && (c.x > 4 || c.x < 3) && c.y == 0) {
+                            evaluation += 40;
+                        }
+                        if (pieceCounter < 16) {
+                            evaluation -= (abs(c.x - 3.5)*15 + abs(c.y - 3.5))*15;
+                            if (pieceCounter < 4) {
+                                evaluation += 14 - (abs(wKing[0] - bKing[0]) + abs(wKing[1] - bKing[1]));
+                            }
                         }
                     }
                 }
             }
         }
         return evaluation;
+    }
+    private int endgameEvaluation(int endgameWeight) {
+
+        return 0;
     }
     private int evaluate2(Game position) {
         int whiteEval = evaluate(position, false);
@@ -65,14 +87,20 @@ public class Engine {
     }
 
     public int recursiveEvaluation(int depth, int alpha, int beta, int start) {
-        if (depth == 0) { return recursiveCapturesEvaluation(-10000, 10000); }
+        if (depth == 0) { return recursiveCapturesEvaluation(alpha, beta); }
 
         ArrayList<int[]> legalMoves = game.legalMoves();
         if (legalMoves.isEmpty()) {
             if (game.kingInCheck(!game.isSideMove())) {
-                return -10000;
+                return -10000 - depth;
             }
             else return 0;
+        }
+        if (game.getPositionCounter() == 3) {
+            return 0;
+        }
+        if (game.getHalfMoveCounter() == 50) {
+            return 0;
         }
         for (int[] move : legalMoves) {
             game.makeMove(move[0], move[1], move[2], move[3], move[4]);
@@ -156,6 +184,9 @@ public class Engine {
 
         }
         return this.move;
+    }
+    public Engine (String FEN) {
+        game = new Game(FEN);
     }
 
 
