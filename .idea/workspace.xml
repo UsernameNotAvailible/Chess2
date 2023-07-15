@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff99b67c-9942-4be5-9f12-3b54509cc5a2" name="Changes" comment="it's getting better">
-      <change afterPath="$PROJECT_DIR$/src/playWithEngine.java" afterDir="false" />
+    <list default="true" id="ff99b67c-9942-4be5-9f12-3b54509cc5a2" name="Changes" comment="Three move repetition is done. And I can turn the engine off">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EngineBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EngineBoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ToFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,8 +92,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CreateFile" />
         <item itemvalue="JUnit.GameTest.countLegalPositions" />
+        <item itemvalue="Application.CreateFile" />
         <item itemvalue="JUnit.GameTest.legalMoves" />
         <item itemvalue="Application.WriteToFile" />
       </list>
@@ -162,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689156416550</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Three move repetition is done. And I can turn the engine off">
+      <created>1689409454862</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1689409454862</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -172,7 +174,8 @@
     <MESSAGE value="seems to work. Improved the engine a lot" />
     <MESSAGE value="making it faster" />
     <MESSAGE value="it's getting better" />
-    <option name="LAST_COMMIT_MESSAGE" value="it's getting better" />
+    <MESSAGE value="Three move repetition is done. And I can turn the engine off" />
+    <option name="LAST_COMMIT_MESSAGE" value="Three move repetition is done. And I can turn the engine off" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -189,13 +192,26 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Game.java</url>
-          <line>1438</line>
-          <option name="timeStamp" value="94" />
+          <line>1518</line>
+          <option name="timeStamp" value="109" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Board.java</url>
-          <line>219</line>
-          <option name="timeStamp" value="102" />
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/Game.java</url>
+          <line>583</line>
+          <properties class="Game" method="kingInCheck">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="110" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/GameTest.java</url>
+          <line>63</line>
+          <properties class="GameTest" method="debugPrint">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="111" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

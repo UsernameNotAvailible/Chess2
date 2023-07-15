@@ -211,16 +211,13 @@ public class Board extends JFrame{
                 return;
             }
             Object source = e.getSource();
-            for (int i = 0; i < 4; i++) {
-                if (source == bottomButtons[0]) {
-                    position.unmakeMove();
-                    resetPieces();
-                }
-                if (source == bottomButtons[3]) {
-                    engineEnabled = false;
-                }
+            if (source == bottomButtons[0]) {
+                position.unmakeMove();
+                resetPieces();
             }
-
+            if (source == bottomButtons[3]) {
+                engineEnabled = false;
+            }
         }
     }
     private void setPieces(Piece[] pieces) {
@@ -266,7 +263,7 @@ public class Board extends JFrame{
         }
     }
     public static void main(String[] args) {
-        Board chessBoard = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ENGINE_DISABLED);
+        Board chessBoard = new Board("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", ENGINE_DISABLED);
 
 
     }

@@ -37,6 +37,26 @@ public class Game {
     private int[] blackKingPosition2 = blackKingPosition;
     private int[] move = new int[] {-1, -1, -1, -1, -1};
     private int[] square = new int[] {-1, -1};
+    private char[][] board = {
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
+    };
+    private char[][] board2 = {
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
+    };
     private Piece movingPiece = null;
     private Piece pieceAtTheEnd = null;
     private Piece c;
@@ -107,6 +127,7 @@ public class Game {
         whiteBishopCounter = 0;
         blackQueenCounter = 0;
         whiteQueenCounter = 0;
+        emptyBoard();
         int x = 0;
         int y = 7;
         pieceCounter = 0;
@@ -121,6 +142,7 @@ public class Game {
         for (char i: FEN.toCharArray()) {
             if (contains(pieces, i) && spaceCounter == 0) {
                 create(i, pieceCounter, x, y);
+                board[y][x] = i;
                 pieceCounter++;
                 s2.append(i);
             }
@@ -439,12 +461,23 @@ public class Game {
     }
     // Methods to check rules
     private Piece findPiece(int x, int y) {
+        char piece = board[y][x];
         for (Piece c: pieces) {
             if (c != null && c.x == x && c.y == y) {
                 return c;
             }
         }
         return null;
+    }
+    private char findPieceForKingInCheck(int x, int y, boolean black) {
+        char piece = ' ';
+        if (x > -1 && x < 8 && y > -1 && y < 8) {
+            piece = board[y][x];
+            if (black) {
+                piece += 32;
+            }
+        }
+        return piece;
     }
     private Piece findPiece2(int x, int y) {
         for (Piece c: pieces2) {
@@ -549,131 +582,131 @@ public class Game {
         }
     }
     private boolean kingInCheck (int x, int y, boolean black) {
+        char c = ' ';
         for (int i = x + 1; i < 8; i++) {
-            c = findPiece(i, y);
-            if (c != null && (c.type == 'r' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(i, y, black);
+            if (c == 'r' || c == 'q') {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
             
         }
         for (int i = x - 1; i > -1; i--) {
-            c = findPiece(i, y);
-            if (c != null && (c.type == 'r' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(i, y, black);
+            if ((c == 'r' || c == 'q')) {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
         }
         for (int i = y + 1; i < 8; i++) {
-            c = findPiece(x, i);
-            if (c != null && (c.type == 'r' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(x, i, black);
+            if ((c == 'r' || c == 'q')) {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
         }
         for (int i = y - 1; i > -1; i--) {
-            c = findPiece(x, i);
-            if (c != null && (c.type == 'r' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(x, i, black);
+            if ((c == 'r' || c == 'q')) {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
         }
         for (int i = 1; i < 8; i++) {
-            c = findPiece(x + i, y + i);
-            if (c != null && (c.type == 'b' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(x + i, y + i, black);
+            if ((c == 'b' || c == 'q')) {
                 return true; 
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
             
         }
         for (int i = 1; i < 8; i++) {
-            c = findPiece(x + i, y - i);
-            if (c != null && (c.type == 'b' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(x + i, y - i, black);
+            if ((c == 'b' || c == 'q')) {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
         }
         for (int i = 1; i < 8; i++) {
-            c = findPiece(x - i, y + i);
-            //System.out.print(c + " " + c.x + " " + c.y + " " + c.black);
-            if (c != null && (c.type == 'b' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(x - i, y + i, black);
+            if ((c == 'b' || c == 'q')) {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
         }
         for (int i = 1; i < 8; i++) {
-            c = findPiece(x - i, y - i);
-            if (c != null && (c.type == 'b' || c.type == 'q') && (c.black != black)) {
+            c = findPieceForKingInCheck(x - i, y - i, black);
+            if ((c == 'b' || c == 'q')) {
                 return true;
             }
-            else if (c != null) {
+            else if (c != ' ' && c != '@') {
                 break;
             }
         }
         
-        c = findPiece(x + 1, y + 2);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x + 1, y - 2);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x - 1, y + 2);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x - 1, y - 2);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x + 2, y + 1);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x + 2, y - 1);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x - 2, y + 1);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
-        c = findPiece(x - 2, y - 1);
-        if (c != null && (c.black != black) && (c.type == 'n')) return true;
+        c = findPieceForKingInCheck(x + 1, y + 2, black);
+        if ((c == 'n')) return true;
+        c = findPieceForKingInCheck(x + 1, y - 2, black);
+        if ((c == 'n')) return true;
+        c = findPieceForKingInCheck(x - 1, y + 2, black);
+        if ((c == 'n')) return true;
+        c= findPieceForKingInCheck(x - 1, y - 2, black);
+        if ((c == 'n')) return true;
+        c= findPieceForKingInCheck(x + 2, y + 1, black);
+        if ((c == 'n')) return true;
+        c= findPieceForKingInCheck(x + 2, y - 1, black);
+        if ((c == 'n')) return true;
+        c= findPieceForKingInCheck(x - 2, y + 1, black);
+        if ((c == 'n')) return true;
+        c= findPieceForKingInCheck(x - 2, y - 1, black);
+        if ((c == 'n')) return true;
 
         if (black) {
-            c = findPiece(x - 1, y - 1);
-            if (c != null && !c.black && c.type == 'p') {
+            c = findPieceForKingInCheck(x - 1, y - 1, black);
+            if (c == 'p') {
                 return true;
             }
-            c = findPiece(x + 1, y - 1);
-            if (c != null && !c.black && c.type == 'p') {
-                return true;
-            }
+            c = findPieceForKingInCheck(x + 1, y - 1, black);
         }
         else {
-            c = findPiece(x - 1, y + 1);
-            if (c != null && c.black && c.type == 'p') {
+            c = findPieceForKingInCheck(x - 1, y + 1, black);
+            if (c == 'p') {
                 return true;
             }
-            c = findPiece(x + 1, y + 1);
-            if (c != null && c.black && c.type == 'p') {
-                return true;
-            }
+            c = findPieceForKingInCheck(x + 1, y + 1, black);
 
         }
-        return false;
+        return c == 'p';
     }
     private void moveTheRook(int xStart, int yStart, int xEnd, int yEnd) {
         if (xEnd - xStart == 2) {
             c = findPiece(7, yEnd);
+            board[yEnd][7] = ' ';
         }
         else if (xEnd - xStart == -2) {
             c = findPiece(0, yEnd);
+            board[yEnd][0] = ' ';
         }
         if (c != null) {
             c.move((xStart + xEnd)/2, yEnd);
+            board[yEnd][(xStart + xEnd)/2] = 'r';
+            if (!c.black) {
+                board[yEnd][(xStart + xEnd)/2] -= 32;
+            }
         }
     }
     public boolean[] ruleCheck(int xStart, int yStart, int xEnd, int yEnd) {
@@ -749,7 +782,7 @@ public class Game {
                 whiteKingPosition2[0] = xEnd;
                 whiteKingPosition2[1] = yEnd;
             }
-            if (isCastling && kingInCheck(xStart, yStart, movingPiece.black)) {
+            if (isCastling && (kingInCheck(xStart, yStart, movingPiece.black) || kingInCheck((xStart + xEnd)/2, yStart, movingPiece.black))) {
                 return ILLEGAL_MOVE;
             }
         }
@@ -770,7 +803,14 @@ public class Game {
                 return ILLEGAL_MOVE;
             }
             if (xEnd == enpassantSquare[0] && yEnd == enpassantSquare[1]) {
-                deletePiece(xEnd, (yEnd + yStart)/2, !movingPiece.black);
+                if (movingPiece.black) {
+                    deletePiece(xEnd, yEnd + 1, false);
+                    board[yEnd + 1][xEnd] = ' ';
+                }
+                else {
+                    deletePiece(xEnd, yEnd - 1, true);
+                    board[yEnd - 1][xEnd] = ' ';
+                }
             }
         }
         
@@ -779,7 +819,11 @@ public class Game {
         }
 
         movingPiece.move(xEnd, yEnd);
-
+        board[yStart][xStart] = ' ';
+        board[yEnd][xEnd] = movingPiece.type;
+        if (!movingPiece.black) {
+            board[yEnd][xEnd] -= 32;
+        }
         if (isCastling) {
             moveTheRook(xStart, yStart, xEnd, yEnd);
         }
@@ -833,6 +877,10 @@ public class Game {
         }
         for (int i = 0; i < 32; i++) {
             if (pieces[i] != null && pieces[i].x == x && pieces[i].y == y) {
+                board[y][x] = type;
+                if (!pieces[i].black) {
+                    board[y][x] -= 32;
+                }
                 if (type == 'q') {
                     pieces[i] = new Queen(x, y, pieces[i].black);
                     return;
@@ -868,6 +916,12 @@ public class Game {
         }
 
         movingPiece.move(xEnd, yEnd);
+        board[yStart][xStart] = ' ';
+        char piece  = movingPiece.type;
+        if (!movingPiece.black) {
+            piece -= 32;
+        }
+        board[yEnd][xEnd] = piece;
         if (movingPiece.type != 'p' || (yEnd != enpassantSquare[1] || xEnd != enpassantSquare[0]) ) {
             enpassantSquare[0] = -1;
             enpassantSquare[1] = -1;
@@ -882,9 +936,11 @@ public class Game {
             if (enpassantSquare[0] == xEnd && enpassantSquare[1] == yEnd) {
                 if (movingPiece.black) {
                     deletePiece(xEnd, yEnd + 1, false);
+                    board[yEnd + 1][xEnd] = ' ';
                 }
                 else {
                     deletePiece(xEnd, yEnd - 1, true);
+                    board[yEnd - 1][xEnd] = ' ';
                 }
             }
             if (yEnd == 7 || yEnd == 0) {
@@ -973,6 +1029,7 @@ public class Game {
         whiteRookCounter = 0;
         whitePawnCounter = 0;
         whiteQueenCounter = 0;
+        returnTheBoard();
         int counter = 0;
         voidPieces();
         for (Piece piece: pieces2) {
@@ -1151,6 +1208,7 @@ public class Game {
         whiteRookCounter = 0;
         whitePawnCounter = 0;
         whiteQueenCounter = 0;
+        copyBoard();
         int counter = 0;
         voidPieces2();
         for (Piece piece: pieces) {
@@ -1318,6 +1376,27 @@ public class Game {
             }
         }
     }
+    private void copyBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board2[i][j] = board[i][j];
+            }
+        }
+    }
+    private void emptyBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[i][j] = ' ';
+            }
+        }
+    }
+    private void returnTheBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[i][j] = board2[i][j];
+            }
+        }
+    }
     public void makeMove(int xStart, int yStart, int xEnd, int yEnd, int type) {
         /*move[0] = xStart;
         move[1] = yStart;
@@ -1353,7 +1432,8 @@ public class Game {
         this.FEN = FEN;
     }
     public void debugPrint() {
-        System.out.println(makeFEN());
+        System.out.println(FEN);
+        printBoard();
     }
     public void unmakeMove() {
         FEN = FENStack.pop();
@@ -1511,6 +1591,14 @@ public class Game {
             evaluation2++;
         }
         return -Integer.compare(evaluation1, evaluation2);
+    }
+    private void printBoard() {
+        for (int i = 7; i > -1; i--) {
+            for (char a: board[i]) {
+                System.out.print(a + "," + " ");
+            }
+            System.out.println();
+        }
     }
     public  Piece BLACK_PAWN = new Pawn(-1, -1, true);
     public  Piece BLACK_PAWN1 = new Pawn(-1, -1, true);
